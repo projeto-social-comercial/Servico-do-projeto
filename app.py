@@ -11,7 +11,7 @@ app = Flask(__name__)
 
 # Logging
 formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
-handler = logging.FileHandler("escolaapp.log")
+handler = logging.FileHandler("appComerciante.log")
 handler.setFormatter(formatter)
 logger = app.logger
 logger.addHandler(handler)
@@ -21,60 +21,59 @@ logger.setLevel(logging.INFO)
 schema = JsonSchema()
 schema.init_app(app)
 
+# schema do comerciante
 comerciante_schema = {
 
 }
 
-DATABASE_NAME = "EscolaApp_versao2.db"
+# schema do endereço
+endereco_schema = {
 
-# listar comerciantes
-@app.route("/comerciante",  methods = ["GET"])
-def getProfessores():
-    logger.info("Listando comerciante.")
-    try:
-        conn = sqlite3.connect(DATABASE_NAME)
-        cursor = conn.cursor()
-        cursor.execute("""
-            select * from tb_comerciante;
-        """)
-        comerciante = []
-        for linha in cursor.fetchall():
-            comerciante = {
-                "id" : linha[0],
-                "nome" : linha[1],
-                "id_endereco" : linha[2]
-            }
-            comerciante.append(comerciante)
-        conn.close()
-    except(sqlite3.Error):
-         logger.error("Aconteceu um erro.")
-    logger.info("Professores listados com sucesso.")
-    return jsonify(comerciante)
+}
+
+# schema do produto
+produto_schema = {
+
+}
+
+DATABASE_NAME ="App_Comerciante.db"
 
 # cadastrar comerciante
 @app.route("/comerciante", methods = ["POST"])
 @schema.validate(comerciante_schema)
-def setProfessor():
-    logger.info("Cadastrando comerciante.")
-    try:
-        conn = sqlite3.connect(DATABASE_NAME)
-        cursor = conn.cursor()
-        comerciante = request.get_json()
-        nome = comerciante["nome"]
-        id_endereco = comerciante["id_endereco"]
+def setComerciante():
 
-        cursor.execute("""
-            insert into tb_comerciante(nome, id_endereco)
-            values(?,?);
-        """, (nome, id_endereco))
-        conn.commit()
-        id = cursor.lastrowid
-        comerciante["id"] = id
-    except(sqlite3.Error, Exception) as e:
-        logger.error("Aconteceu um erro.")
-        logger.error("Exceção: %s" % e)
-    finally:
-        if conn:
-            conn.close()
-    logger.info("Professor cadastrado com sucesso.")
-    return jsonify(comerciante)
+# cadastrar endereço
+@app.route("/endereco", methods = ["POST"])
+@schema.validate(endereco_schema)
+def setEndereco():
+
+# cadastrar produto
+@app.route("/produto", methods = ["POST"])
+@schema.validate(produto_schema)
+def setProduto():
+
+# listar comerciante
+@app.route("/comerciantes",  methods = ["GET"])
+def getComerciantes():
+
+# Mensagem de erro para recurso não encontrado.
+@app.errorhandler(404)
+def not_found(error=None):
+    message = {
+            'status': 404,
+            'message': 'Not Found: ' + request.url,
+    }
+    resp = jsonify(message)
+    resp.status_code = 404
+
+    return resp
+
+@app.errorhandler(JsonValidationError)
+def validation_error(e):
+    return jsonify({ 'error': e.message, 'errors': [validation_error.message for validation_error  in e.errors]})
+
+cors = CORS(app, resources={r"/*": {"origins": "*"}})
+
+if(__name__ == '__main__'):
+    app.run(host='0.0.0.0', debug=True, use_reloader=True)

@@ -9,7 +9,7 @@ cursor.execute("""
 	id_empresa INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 	nome VARCHAR(45) NOT NULL,
 	id_endereco INTEGER NOT NULL,
-	Email VARCHAR(255) NOT NULL,
+	email VARCHAR(255) NOT NULL,
 	telefone INTEGER NOT NULL,
 	instagram VARCHAR(255) NOT NULL,
 	FOREIGN KEY(id_endereco) REFERENCES tb_endereco(id_endereco)

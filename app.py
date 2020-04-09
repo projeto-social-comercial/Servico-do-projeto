@@ -23,17 +23,38 @@ schema.init_app(app)
 
 # schema do empresa
 empresa_schema = {
-
+    "required": ["nome", "id_endereco", "email", "telefone", "instagram"],
+    "properties": {
+        "nome" : {"type" : "string"},
+        "id_endereco" : {"type" : "string"},
+        "email" : {"type" : "string"},
+        "telefone" : {"type" : "string"},
+        "instagram" : {"type" : "string"}
+    }
 }
 
 # schema do endereço
 endereco_schema = {
-
+    "required": ["logradouro","numero", "complemento", "cidade", "estado", "cep", "ponto_referencia"],
+    "properties": {
+        "logradouro" : {"type" : "string"},
+        "numero" : {"type" : "string"},
+        "complemento" : {"type" : "string"},
+        "cidade" : {"type" : "string"},
+        "estado" : {"type" : "string"},
+        "cep" : {"type" : "string"},
+        "ponto_referencia" : {"type" : "string"}
+    }
 }
 
 # schema do produto
 produto_schema = {
-
+    "required": ["nome", "descricao", "preco"],
+    "properties": {
+        "nome" : {"type" : "string"},
+        "descricao" : {"type" : "string"},
+        "preco" : {"type" : "string"}
+    }
 }
 
 DATABASE_NAME ="App_Comerciante.db"
@@ -42,20 +63,124 @@ DATABASE_NAME ="App_Comerciante.db"
 @app.route("/empresa", methods = ["POST"])
 @schema.validate(empresa_schema)
 def setEmpresa():
+    logger.info("Cadastrando empresa.")
+    empresa = request.get_json()
+    nome = empresa["nome"]
+    id_endereco = empresa["id_endereco"]
+    email = empresa["email"]
+    telefone = empresa["telefone"]
+    instagram = empresa["instagram"]
+
+    try:
+        conn = sqlite3.connect(DATABASE_NAME)
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            insert into tb_empresa(nome, id_endereco, email, telefone, instagram)
+            values(?, ?, ?, ?, ?);
+        """, (nome, id_endereco, email, telefone, instagram))
+        conn.commit()
+        id = cursor.lastrowid
+        empresa["id"] = id
+    except(sqlite3.Error, Exception) as e:
+        logger.error("Aconteceu um erro.")
+        logger.error("Exceção: %s" % e)
+    finally:
+        if conn:
+            conn.close()
+    logger.info("Empresa cadastrada com sucesso.")
+    return jsonify(empresa)
 
 # cadastrar endereço
 @app.route("/endereco", methods = ["POST"])
 @schema.validate(endereco_schema)
 def setEndereco():
+    logger.info("Cadastrando endereço.")
+    endereco = request.get_json()
+    logradouro = endereco["logradouro"]
+    numero = endereco["numero"]
+    complemento = endereco["complemento"]
+    cidade = endereco["cidade"]
+    estado = endereco["estado"]
+    cep = endereco["cep"]
+    ponto_referencia = endereco["ponto_referencia"]
+
+    try:
+        conn = sqlite3.connect(DATABASE_NAME)
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            insert into tb_endereco(logradouro, numero, complemento, cidade, estado, cep, ponto_referencia)
+            values(?, ?, ?, ?, ?, ?, ?);
+        """, (logradouro, numero, complemento, cidade, estado, cep, ponto_referencia))
+        conn.commit()
+        id = cursor.lastrowid
+        endereco["id"] = id
+    except(sqlite3.Error, Exception) as e:
+        logger.error("Aconteceu um erro.")
+        logger.error("Exceção: %s" % e)
+    finally:
+        if conn:
+            conn.close()
+    logger.info("Endereço cadastrado com sucesso.")
+    return jsonify(endereco)
 
 # cadastrar produto
 @app.route("/produto", methods = ["POST"])
 @schema.validate(produto_schema)
 def setProduto():
+    logger.info("Cadastrando produto.")
+    produto = request.get_json()
+    nome = produto["nome"]
+    descricao = produto["descricao"]
+    preco = produto["preco"]
+
+    try:
+        conn = sqlite3.connect(DATABASE_NAME)
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            insert into tb_produto(nome, descricao, preco)
+            values(?, ?, ?);
+        """, (nome, descricao, preco))
+        conn.commit()
+        id = cursor.lastrowid
+        produto["id"] = id
+    except(sqlite3.Error, Exception) as e:
+        logger.error("Aconteceu um erro.")
+        logger.error("Exceção: %s" % e)
+    finally:
+        if conn:
+            conn.close()
+    logger.info("Produto cadastrado com sucesso.")
+    return jsonify(produto)
 
 # listar empresas
 @app.route("/empresas",  methods = ["GET"])
 def getEmpresas():
+    logger.info("Listando empresas.")
+    try:
+        conn = sqlite3.connect(DATABASE_NAME)
+        cursor = conn.cursor()
+        cursor.execute("""
+            select * from tb_empresa;
+        """)
+        empresas = []
+        for linha in cursor.fetchall():
+            empresa = {
+                "id" : linha[0],
+                "nome" : linha[1],
+                "id_endereco" : linha[2],
+                "email" : linha[3],
+                "telefone" : linha[4],
+                "instagram" : linha[5]
+            }
+            empresas.append(empresa)
+        conn.close()
+    except(sqlite3.Error):
+         logger.error("Aconteceu um erro.")
+    logger.info("Empresas listadas com sucesso.")
+    return jsonify(empresas)
 
 # Mensagem de erro para recurso não encontrado.
 @app.errorhandler(404)

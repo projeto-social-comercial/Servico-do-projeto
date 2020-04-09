@@ -21,8 +21,8 @@ logger.setLevel(logging.INFO)
 schema = JsonSchema()
 schema.init_app(app)
 
-# schema do comerciante
-comerciante_schema = {
+# schema do empresa
+empresa_schema = {
 
 }
 
@@ -38,10 +38,10 @@ produto_schema = {
 
 DATABASE_NAME ="App_Comerciante.db"
 
-# cadastrar comerciante
-@app.route("/comerciante", methods = ["POST"])
-@schema.validate(comerciante_schema)
-def setComerciante():
+# cadastrar empresa
+@app.route("/eempresa", methods = ["POST"])
+@schema.validate(empresa_schema)
+def setEmpresa():
 
 # cadastrar endereço
 @app.route("/endereco", methods = ["POST"])
@@ -53,9 +53,9 @@ def setEndereco():
 @schema.validate(produto_schema)
 def setProduto():
 
-# listar comerciante
-@app.route("/comerciantes",  methods = ["GET"])
-def getComerciantes():
+# listar empresas
+@app.route("/empresas",  methods = ["GET"])
+def getEmpresas():
 
 # Mensagem de erro para recurso não encontrado.
 @app.errorhandler(404)

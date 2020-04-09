@@ -39,7 +39,7 @@ produto_schema = {
 DATABASE_NAME ="App_Comerciante.db"
 
 # cadastrar empresa
-@app.route("/eempresa", methods = ["POST"])
+@app.route("/empresa", methods = ["POST"])
 @schema.validate(empresa_schema)
 def setEmpresa():
 

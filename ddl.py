@@ -31,7 +31,7 @@ cursor.execute("""
 
 cursor.execute("""
 	CREATE TABLE tb_produto(
-	id_endereco INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	id_produto INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 	nome VARCHAR(45) NOT NULL,
 	descricao VARCHAR(45) NOT NULL,
 	preco NUMERIC(12,2) NOT NULL

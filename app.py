@@ -70,15 +70,16 @@ def setEmpresa():
     email = empresa["email"]
     telefone = empresa["telefone"]
     instagram = empresa["instagram"]
+    facebook = empresa["facebook"]
 
     try:
         conn = sqlite3.connect(DATABASE_NAME)
         cursor = conn.cursor()
 
         cursor.execute("""
-            insert into tb_empresa(nome, id_endereco, email, telefone, instagram)
-            values(?, ?, ?, ?, ?);
-        """, (nome, id_endereco, email, telefone, instagram))
+            insert into tb_empresa(nome, id_endereco, email, telefone, instagram, facebook)
+            values(?, ?, ?, ?, ?, ?);
+        """, (nome, id_endereco, email, telefone, instagram, facebook))
         conn.commit()
         id = cursor.lastrowid
         empresa["id"] = id
@@ -173,7 +174,8 @@ def getEmpresas():
                 "id_endereco" : linha[2],
                 "email" : linha[3],
                 "telefone" : linha[4],
-                "instagram" : linha[5]
+                "instagram" : linha[5],
+                "facebook" : linha[6]
             }
             empresas.append(empresa)
         conn.close()

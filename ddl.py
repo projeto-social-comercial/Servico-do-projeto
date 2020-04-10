@@ -12,6 +12,7 @@ cursor.execute("""
 	email VARCHAR(255) NOT NULL,
 	telefone INTEGER NOT NULL,
 	instagram VARCHAR(255) NOT NULL,
+	facebook VARCHAR(255) NOT NULL,
 	FOREIGN KEY(id_endereco) REFERENCES tb_endereco(id_endereco)
 	);
 """)

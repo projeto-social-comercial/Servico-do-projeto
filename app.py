@@ -23,7 +23,7 @@ schema.init_app(app)
 
 # schema do empresa
 empresa_schema = {
-    "required": ["nome", "id_endereco", "email", "telefone", "instagram"],
+    "required": ["nome", "id_endereco", "email", "telefone", "instagram", "facebook"],
     "properties": {
         "nome" : {"type" : "string"},
         "id_endereco" : {"type" : "string"},

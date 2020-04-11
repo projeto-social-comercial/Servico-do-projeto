@@ -29,7 +29,8 @@ empresa_schema = {
         "id_endereco" : {"type" : "string"},
         "email" : {"type" : "string"},
         "telefone" : {"type" : "string"},
-        "instagram" : {"type" : "string"}
+        "instagram" : {"type" : "string"},
+        "facebook" : {"type" : "string"}
     }
 }
 

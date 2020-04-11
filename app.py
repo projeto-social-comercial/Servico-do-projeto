@@ -23,7 +23,7 @@ schema.init_app(app)
 
 # schema do empresa
 empresa_schema = {
-    "required": ["nome", "id_endereco", "email", "telefone", "instagram"],
+    "required": ["nome", "id_endereco", "email", "telefone", "instagram", "facebook"],
     "properties": {
         "nome" : {"type" : "string"},
         "id_endereco" : {"type" : "string"},
@@ -110,7 +110,6 @@ def setEndereco():
     try:
         conn = sqlite3.connect(DATABASE_NAME)
         cursor = conn.cursor()
-
         cursor.execute("""
             insert into tb_endereco(logradouro, numero, complemento, cidade, estado, cep, ponto_referencia)
             values(?, ?, ?, ?, ?, ?, ?);

@@ -26,7 +26,7 @@ empresa_schema = {
     "required": ["nome", "id_endereco", "email", "telefone", "instagram", "facebook"],
     "properties": {
         "nome" : {"type" : "string"},
-        "id_endereco" : {"type" : "string"},
+        "id_endereco" : {"type" : "integer"},
         "email" : {"type" : "string"},
         "telefone" : {"type" : "string"},
         "instagram" : {"type" : "string"},
@@ -36,7 +36,7 @@ empresa_schema = {
 
 # schema do endereço
 endereco_schema = {
-    "required": ["logradouro","numero", "complemento", "cidade", "estado", "cep", "ponto_referencia"],
+    "required": ["logradouro","numero", "cidade", "estado", "cep"],
     "properties": {
         "logradouro" : {"type" : "string"},
         "numero" : {"type" : "string"},
@@ -198,7 +198,7 @@ def not_found(error=None):
 
 @app.errorhandler(JsonValidationError)
 def validation_error(e):
-    return jsonify({ 'error': e.message, 'errors': [validation_error.message for validation_error  in e.errors]})
+    return jsonify({ 'error': e.message, 'errors': [validation_error.message for validation_error  in e.errors]}), 400
 
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
 

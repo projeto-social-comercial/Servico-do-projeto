@@ -164,8 +164,10 @@ def getEmpresas():
         conn = sqlite3.connect(DATABASE_NAME)
         cursor = conn.cursor()
         cursor.execute("""
-            select empresa.id_empresa, nome, endereco.logradouro, numero, complemento, cidade, 
-            estado, cep, ponto_referencia, empresa.email, telefone, instagram,facebook
+            select id_empresa, empresa.nome,
+            endereco.logradouro, endereco.numero, endereco.complemento, endereco.cidade,
+            endereco.estado, endereco.cep, endereco.ponto_referencia,
+            empresa.email, empresa.telefone, empresa.instagram, empresa.facebook
             from tb_empresa empresa
             inner join tb_endereco endereco on(empresa.id_endereco = endereco.id_endereco);
         """)

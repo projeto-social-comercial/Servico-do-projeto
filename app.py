@@ -164,18 +164,27 @@ def getEmpresas():
         conn = sqlite3.connect(DATABASE_NAME)
         cursor = conn.cursor()
         cursor.execute("""
-            select * from tb_empresa;
+            select empresa.id_empresa, nome, endereco.logradouro, numero, complemento, cidade, 
+            estado, cep, ponto_referencia, empresa.email, telefone, instagram,facebook
+            from tb_empresa empresa
+            inner join tb_endereco endereco on(empresa.id_endereco = endereco.id_endereco);
         """)
         empresas = []
         for linha in cursor.fetchall():
             empresa = {
                 "id" : linha[0],
                 "nome" : linha[1],
-                "id_endereco" : linha[2],
-                "email" : linha[3],
-                "telefone" : linha[4],
-                "instagram" : linha[5],
-                "facebook" : linha[6]
+                "logradouro" : linha[2],
+                "numero" : linha[3],
+                "complemento" : linha[4],
+                "cidade" : linha[5],
+                "estado" : linha[6],
+                "cep" : linha[7],
+                "ponto_referencia" : linha[8],
+                "email" : linha[9],
+                "telefone" : linha[10],
+                "instagram" : linha[11],
+                "facebook" : linha[12]
             }
             empresas.append(empresa)
         conn.close()
